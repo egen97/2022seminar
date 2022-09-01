@@ -16,3 +16,14 @@ cat(spr_time$question_time$question_text)          #Hvorfor id 300? No clue
 blairIraq <- read_html("https://www.theguardian.com/politics/2003/mar/18/foreignpolicy.iraq1", encoding = "utf-8")  %>% 
   html_nodes(xpath = "//*[@id='maincontent']/div") %>% 
   html_text2()
+
+# Laste ned med selector
+
+download.file("https://www.theguardian.com/politics/2003/mar/18/foreignpolicy.iraq1", destfile = "sma_filer/blair_download.html")
+
+
+
+writeLines(blairIraq, "sma_filer/blairIraq.txt")
+
+BlairTxT <- readLines("sma_filer/blairIraq.txt")
+
