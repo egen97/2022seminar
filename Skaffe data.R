@@ -1,11 +1,8 @@
 #Pakke fra Martin/Notebooken om API
 library(stortingscrape) 
 library(rvest) 
-library(academictwitteR)
 
 
-spr_time <- stortingscrape::get_question_hour(300) #Henter spørsmål herifra https://www.stortinget.no/no/Saker-og-publikasjoner/Publikasjoner/Referater/Stortinget/1997-1998/980520/ordinarsporretime/
-cat(spr_time$question_time$question_text)          #Hvorfor id 300? No clue
 
 
 
@@ -30,19 +27,42 @@ writeLines(blairIraq, "sma_filer/blairIraq.txt")
 
 BlairTxT <- readLines("sma_filer/blairIraq.txt")
 
-##Just to show, Twitter (min API nøkell)
+#Stortinget API
+spr_time <- stortingscrape::get_question_hour(300) #Henter spørsmål herifra https://www.stortinget.no/no/Saker-og-publikasjoner/Publikasjoner/Referater/Stortinget/1997-1998/980520/ordinarsporretime/
+cat(spr_time$question_time$question_text)          #Hvorfor id 300? No clue
 
-set_bearer() #Skriv inn denne AAAAAAAAAAAAAAAAAAAAAPBrggEAAAAADBzvp4FvfyDOkrv1wjNTeTr9jWI%3D68WZraxTObFo3yShgYRmfe40GNGGTQkTwRscXK3oOz0KAOLkCi
-get_bearer()
 
-tweets_ <-
-  get_all_tweets('(#textanalysis OR #textastweet_data OR (computational text analysis))',
-                 "2022-07-20T12:00:00Z",
-                 "2022-07-25T00:00:00Z",
-                  data_path = "tweets/", #Storage in memory
-                 bind_tweets = FALSE,
-                 lang="en",
-                 bearer_token = "AAAAAAAAAAAAAAAAAAAAAPBrggEAAAAAtPjkwlqhC1R%2FUrRXSja1QxtlGkg%3DquL5lphTM9KjbLvA5gV3ZYcLLAlMF2HmXQ2zizd2TOnOsdcJIc",
-                 n = 1, 
-                 verbose = TRUE)
+#Ruter API
+if(file.exists("./data/ruter.xml") == FALSE){
+  download.file(url = "https://api.entur.io/realtime/v1/rest/et?datasetId=RUT",
+                destfile = "sma_filer/ruter.xml")
+}
+
+ruter <- read_html("sma_filer/ruter.xml")
+
+
+
+
+stopp <- ruter %>% html_elements("recordedcall")
+
+# For hvert av disse elementene lager vi en tibble()
+# (merk at bare UNIX-systemer kan bruke flere kjerner enn 1)
+# Dette tar litt tid å kjøre
+alle_stopp <- lapply(stopp, function(x){
+  
+  
+  tibble::tibble(
+    stop_id = x %>% html_elements("stoppointref") %>% html_text(),
+    order = x %>% html_elements("order") %>% html_text(),
+    stopp_name = x %>% html_elements("stoppointname") %>% html_text(),
+    aimed_dep = x %>% html_elements("aimeddeparturetime") %>% html_text(),
+    actual_dep = x %>% html_elements("actualdeparturetime") %>% html_text()
+  )
+}  
+)  
+  
+
+
+alle_stopp <- bind_rows(alle_stopp)
+
 
