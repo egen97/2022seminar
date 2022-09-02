@@ -30,7 +30,7 @@ BlairTxT <- readLines("sma_filer/blairIraq.txt")
 #Stortinget API
 spr_time <- stortingscrape::get_question_hour(300) #Henter spørsmål herifra https://www.stortinget.no/no/Saker-og-publikasjoner/Publikasjoner/Referater/Stortinget/1997-1998/980520/ordinarsporretime/
 cat(spr_time$question_time$question_text)          #Hvorfor id 300? No clue
-
+saveRDS(spr_time, "sma_filer/spr_time_300.rds")
 
 #Ruter API
 if(file.exists("./data/ruter.xml") == FALSE){
