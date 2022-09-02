@@ -73,3 +73,30 @@ spr_time_tokens %>%
             with_ties = FALSE)
 
 
+
+
+idf_stop <- spr_time_tokens %>% 
+  add_count(token) %>% 
+  bind_tf_idf(token, question_id, n) %>% 
+  ungroup() %>% 
+  select(token, idf) %>% 
+  unique() %>% 
+  arrange(idf)
+
+idf_stop
+
+
+
+
+
+idf_stop <- idf_stop %>% 
+  filter(idf < 1)
+
+
+spr_time_tokens %>%
+  
+  filter(token %in% idf_stop$token == FALSE) %>% 
+  slice_max(order_by = n,
+            n = 2,
+            with_ties = FALSE)
+
