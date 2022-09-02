@@ -41,3 +41,35 @@ tidy_books %>% head(300) %>%
   ggrepel::geom_label_repel(aes(label = word)) +
   ggdark::dark_theme_classic() +
   labs(x = "Rangering (log)", y = "Frekvens (log)", title = "Zipf's lov illustrasjon")
+
+
+
+
+
+#Stoppord
+stopwords(language = "no")
+
+
+
+
+spr_time_tokens <- spr_time$question_time %>% 
+  unnest_tokens(output = token,
+                input = question_text)  
+
+spr_time_tokens %>% 
+  count(token) %>% 
+  slice_max(order_by = n,
+            n = 2,
+            with_ties = FALSE)
+
+
+
+
+spr_time_tokens %>% 
+  count(token) %>% 
+  filter(token %in% quanteda::stopwords("no") == FALSE) %>% 
+  slice_max(order_by = n,
+            n = 2,
+            with_ties = FALSE)
+
+
