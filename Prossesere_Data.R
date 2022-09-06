@@ -94,9 +94,16 @@ idf_stop <- idf_stop %>%
 
 
 spr_time_tokens %>%
-  
   filter(token %in% idf_stop$token == FALSE) %>% 
+  count(token) %>% 
   slice_max(order_by = n,
-            n = 2,
+            n = 10,
             with_ties = FALSE)
+
+
+
+
+
+
+
 
