@@ -32,37 +32,37 @@ spr_time <- stortingscrape::get_question_hour(300) #Henter spørsmål herifra ht
 cat(spr_time$question_time$question_text)          #Hvorfor id 300? No clue
 saveRDS(spr_time, "sma_filer/spr_time_300.rds")
 
-#Ruter API
-if(file.exists("./data/ruter.xml") == FALSE){
-  download.file(url = "https://api.entur.io/realtime/v1/rest/et?datasetId=RUT",
-                destfile = "sma_filer/ruter.xml")
-}
-
-ruter <- read_html("sma_filer/ruter.xml")
-
-
-
-
-stopp <- ruter %>% html_elements("recordedcall")
+# #Ruter API
+# if(file.exists("./data/ruter.xml") == FALSE){
+#   download.file(url = "https://api.entur.io/realtime/v1/rest/et?datasetId=RUT",
+#                 destfile = "sma_filer/ruter.xml")
+# }
+# 
+# ruter <- read_html("sma_filer/ruter.xml")
+# 
+# 
+# 
+# 
+# stopp <- ruter %>% html_elements("recordedcall")
 
 # For hvert av disse elementene lager vi en tibble()
 # (merk at bare UNIX-systemer kan bruke flere kjerner enn 1)
 # Dette tar litt tid å kjøre
-alle_stopp <- lapply(stopp, function(x){
-  
-  
-  tibble::tibble(
-    stop_id = x %>% html_elements("stoppointref") %>% html_text(),
-    order = x %>% html_elements("order") %>% html_text(),
-    stopp_name = x %>% html_elements("stoppointname") %>% html_text(),
-    aimed_dep = x %>% html_elements("aimeddeparturetime") %>% html_text(),
-    actual_dep = x %>% html_elements("actualdeparturetime") %>% html_text()
-  )
-}  
-)  
-  
-
-
-alle_stopp <- bind_rows(alle_stopp)
+# alle_stopp <- lapply(stopp, function(x){
+#   
+#   
+#   tibble::tibble(
+#     stop_id = x %>% html_elements("stoppointref") %>% html_text(),
+#     order = x %>% html_elements("order") %>% html_text(),
+#     stopp_name = x %>% html_elements("stoppointname") %>% html_text(),
+#     aimed_dep = x %>% html_elements("aimeddeparturetime") %>% html_text(),
+#     actual_dep = x %>% html_elements("actualdeparturetime") %>% html_text()
+#   )
+# }  
+# )  
+#   
+# 
+# 
+# alle_stopp <- bind_rows(alle_stopp)
 
 
