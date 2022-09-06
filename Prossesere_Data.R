@@ -3,7 +3,7 @@ library(quanteda)
 library(janeaustenr)
 library(tidytext)
 library(ggdark)
-
+library(quanteda.textplots)
 
 
 spr_time <- readRDS("sma_filer/spr_time_300.rds")
@@ -102,8 +102,25 @@ spr_time_tokens %>%
 
 
 
+## Lage en data-feature-matrix
+
+spr_time_corpus <- corpus(spr_time$question_time, docid_field = "question_id", text_field = "question_text")
 
 
+spr_time_tokens <- tokens(spr_time_corpus,
+  remove_numbers = TRUE,
+  remove_punct = TRUE,
+  remove_symbols = TRUE,
+  remove_separators = TRUE,
+  remove_url = TRUE,
+  verbose = TRUE
+)
 
 
+spr_time_tokens <- tokens_tolower(spr_time_tokens)
 
+spr_time_tokens <- tokens_remove(spr_time_tokens, pattern = stopwords('no'))
+
+spr_time_dfm <- dfm(spr_time_tokens)
+
+textplot_network(spr_time_dfm, min_freq = 0.9)
