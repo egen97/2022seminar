@@ -1,9 +1,11 @@
 ---
 title: "Seminar 1"
 author: "Eric G. E. Nilsen"
-date: "`r Sys.Date()`"
-output: html_document
-editor_options: 
+date: '222'
+output:
+  pdf_document: default
+  html_document: default
+editor_options:
   chunk_output_type: console
 ---
 
@@ -27,20 +29,20 @@ library(textreadr)
 download.file("https://www.theguardian.com/politics/2003/mar/18/foreignpolicy.iraq1", destfile = "blairIraq.html")
 
 
-blair_text <- read_html("blairIraq.html") %>% 
-  html_nodes(xpath = "//*[@id='maincontent']/div") %>% 
-  html_text2()
+# blair_text <- read_html("blairIraq.html") %>% 
+#   html_nodes(xpath = "//*[@id='maincontent']/div") %>% 
+#   html_text2()
+# 
+# 
+# blair_text <- read_html("https://www.theguardian.com/politics/2003/mar/18/foreignpolicy.iraq1") %>% 
+#   html_nodes(xpath = "//*[@id='maincontent']/div") %>% 
+#   html_text2()
 
 
-blair_text <- read_html("https://www.theguardian.com/politics/2003/mar/18/foreignpolicy.iraq1") %>% 
-  html_nodes(xpath = "//*[@id='maincontent']/div") %>% 
-  html_text2()
-
-
-saveRDS(blair_text, "sma_filer/sem1blair.rds")
-blairnr222222 <- readRDS("sma_filer/sem1blair.rds")
-
-writeLines(blair_text, "textFile.txt")
+#saveRDS(blair_text, "sma_filer/sem1blair.rds")
+# blairnr222222 <- readRDS("sma_filer/sem1blair.rds")
+# 
+# writeLines(blair_text, "textFile.txt")
 
 
 ```
@@ -49,12 +51,12 @@ Stortings API
 
 ```{r}
 
-spr_time <- stortingscrape::get_question_hour(300)
-
-cat(spr_time$question_time$question_text)
-r
-
-
-noo <- readtext::readtext("Analytisk sammendrag av Kant.docx")
-cat(noo$text)
+# spr_time <- stortingscrape::get_question_hour(300)
+# 
+# cat(spr_time$question_time$question_text)
+# 
+# 
+# 
+# noo <- readtext::readtext("Analytisk sammendrag av Kant.docx")
+# cat(noo$text)
 ```
