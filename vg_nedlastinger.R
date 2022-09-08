@@ -46,7 +46,7 @@ wiki_link <- read_html("sma_filer/latWiki.html") %>%
 
 download.file(str_c(base_url, wiki_link[2]), destfile = "sma_filer/wiki/test.html")
 
-komplette_linker <- str_c(base_url, wiki_link[2:135])
+komplette_linker2 <- str_c(base_url, wiki_link[2:135])
 
 for(i in seq_along(komplette_linker)){
   
