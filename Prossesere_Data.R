@@ -6,14 +6,14 @@ library(ggdark)
 library(quanteda.textplots)
 
 
-spr_time <- readRDS("sma_filer/spr_time_300.rds")
-spr_time_tekst <- spr_time$question_time$question_text
 
 nrk_df <- as.data.frame(do.call(rbind, nrk_artikler))
+
 names(nrk_df)[1] <- "text"
 nrk_df$id <- 1:8
-bag_of_words <- spr_time_tekst %>%
-  str_split("\\s") %>%
+
+bag_of_words <- nrk_df %>%
+  str_split(text,"\\s") %>%
   unlist()
 
 set.seed(984301)
