@@ -3,13 +3,13 @@ library(newsanchor) #Pakke for å bruke API'n
 library(rvest) 
 library(tidyverse)
 #Må registrere en API-nøkell på nettsiden newsapi.org, er gratis å få! Tenk over denne som ditt passord til api'n, så ikke gi den bort :)
-api_key="Putt din API-nøkell her"
+api_key="6d8bd6547b6442f081c2d2043d52e824"
 
 newsanchor::terms_sources #Viser hvilke kilder du kan hente fra, bl.a. Aftenposten og NRK
 
 #Hente overskrifter
 
-overskrifter_nrk <- get_headlines(sources = "nrk", api_key = api_key)
+overskrifter_nrk <- get_headlines_all(sources = "nrk", api_key = api_key)
 cat(overskrifter_nrk$results_df$title)
 cat(overskrifter_nrk$results_df$content)
 
@@ -50,8 +50,7 @@ for (i in 1:length(nrk_nettsider)) {
   
   nrk_artikler[[i]] <- page
   print(i)
-} #Du vil se at denne ikke gir et resultat for link 2,3,5, og 10. Det er fordi xpath'n vi brukte kun fungerer for nyhetsartikler, og ikke f.eks. mat-artiklene
-  #Ønsker vi det må vi skille ut disse, og lage en egen xpath for dem.
+} 
 
 
 
