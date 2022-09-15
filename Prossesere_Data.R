@@ -5,7 +5,7 @@ library(tidytext)
 library(ggdark)
 library(quanteda.textplots)
 
-
+nrk_art
 
 nrk_df <- as.data.frame(do.call(rbind, nrk_artikler))
 
@@ -13,14 +13,15 @@ names(nrk_df)[1] <- "text"
 nrk_df$id <- 1:8
 
 bag_of_words <- nrk_df %>%
-  str_split(text,"\\s") %>%
+  mutate(text = str_split(text,"\\s")) %>%
   unlist()
 
 set.seed(984301)
 
 cat(bag_of_words[sample(1:length(bag_of_words))])
 
-spr_time_tekst[which(str_detect(spr_time_tekst, "Sverige"))]
+cat(nrk_df$text[which(str_detect(nrk_df$text, "EU"))])
+
 
 original_books <- austen_books() %>%
   group_by(book) %>%
@@ -54,11 +55,11 @@ stopwords(language = "no")
 
 
 
-spr_time_tokens <- spr_time$question_time %>% 
+nrk_tokens <- nrk_df %>% 
   unnest_tokens(output = token,
-                input = question_text)  
+                input = text)  
 
-spr_time_tokens %>% 
+nrk_tokens %>% 
   count(token) %>% 
   slice_max(order_by = n,
             n = 2,
@@ -67,7 +68,7 @@ spr_time_tokens %>%
 
 
 
-spr_time_tokens %>% 
+nrk_tokens %>% 
   count(token) %>% 
   filter(token %in% quanteda::stopwords("no") == FALSE) %>% 
   slice_max(order_by = n,
@@ -77,9 +78,9 @@ spr_time_tokens %>%
 
 
 
-idf_stop <- spr_time_tokens %>% 
+idf_stop <- nrk_tokens %>% 
   add_count(token) %>% 
-  bind_tf_idf(token, question_id, n) %>% 
+  bind_tf_idf(token, id, n) %>% 
   ungroup() %>% 
   select(token, idf) %>% 
   unique() %>% 
@@ -95,7 +96,7 @@ idf_stop <- idf_stop %>%
   filter(idf < 1)
 
 
-spr_time_tokens %>%
+nrk_tokens %>%
   filter(token %in% idf_stop$token == FALSE) %>% 
   count(token) %>% 
   slice_max(order_by = n,
@@ -106,10 +107,10 @@ spr_time_tokens %>%
 
 ## Lage en data-feature-matrix
 
-spr_time_corpus <- corpus(spr_time$question_time, docid_field = "question_id", text_field = "question_text")
+nrk_corpus <- corpus(nrk_df, docid_field = "id", text_field = "text")
 
 
-spr_time_tokens <- tokens(spr_time_corpus,
+nrk_tokens <- tokens(nrk_corpus,
   remove_numbers = TRUE,
   remove_punct = TRUE,
   remove_symbols = TRUE,
@@ -119,10 +120,12 @@ spr_time_tokens <- tokens(spr_time_corpus,
 )
 
 
-spr_time_tokens <- tokens_tolower(spr_time_tokens)
+nrk_tokens <- tokens_tolower(nrk_tokens)
 
-spr_time_tokens <- tokens_remove(spr_time_tokens, pattern = stopwords('no'))
+nrk_tokens <- tokens_remove(nrk_tokens, pattern = stopwords('no'))
 
-spr_time_dfm <- dfm(spr_time_tokens)
+nrk_dfm <- dfm(nrk_tokens)
 
-textplot_network(spr_time_dfm, min_freq = 0.9)
+textplot_network(nrk_dfm, min_freq = 1)
+textplot_wordcloud(nrk_dfm)
+?textplot_xray()

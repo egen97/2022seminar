@@ -51,7 +51,7 @@ for (i in 1:length(nrk_nettsider)) {
   nrk_artikler[[i]] <- page
   print(i)
 } 
-
+saveRDS(nrk_artikler, "sma_filer/nrk_artikler.rds")
 
 
 
