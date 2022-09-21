@@ -43,7 +43,7 @@ nrk_tokens <- nrk_df %>%
 nrk_tokens %>% 
   count(token) %>% 
   slice_max(order_by = n,
-            n = 2,
+            n = 10,
             with_ties = FALSE)
 
 
@@ -53,7 +53,7 @@ nrk_tokens %>%
   count(token) %>% 
   filter(!(token %in% quanteda::stopwords("no"))) %>% 
   slice_max(order_by = n,
-            n = 2,
+            n = 10,
             with_ties = FALSE)
 
 
@@ -73,8 +73,8 @@ idf_stop
 
 
 
-idf_stop <- idf_stop %>% 
-  filter(idf < 1)
+idf_stop2 <- idf_stop %>% 
+  filter(idf < 1.1)
 
 
 nrk_tokens %>%
@@ -86,8 +86,8 @@ nrk_tokens %>%
 
 
 nrk_tokens %>%
-  #filter(!(token %in% idf_stop$token)) %>% 
-  filter(!str_detect(token, "\\d")) %>% 
+  filter(!(token %in% idf_stop$token)) %>% 
+  #filter(!str_detect(token, "\\d")) %>% 
   count(token) %>%
   arrange(desc(n)) %>% 
   head(300) %>% 
@@ -143,11 +143,11 @@ textplot_wordcloud(nrk_dfm)
 
 kwic(nrk_tokens, "amp")
 
-nrk_kwik <- kwic(nrk_tokens, "EU")
+nrk_kwik <- kwic(nrk_tokens, "EU", window = 6)
 
 nrk_tokens <- tokens_remove(nrk_tokens, pattern = c(stopwords('no'), "amp"))
 
-textplot_xray(kwic(nrk_tokens, "nrk")) +
+textplot_xray(nrk_kwik) +
   ggthemes::theme_fivethirtyeight() + 
   aes(color = keyword) + 
   scale_color_manual(values = "red")
