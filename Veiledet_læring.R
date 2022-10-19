@@ -6,13 +6,13 @@ library(rainette)
 library(quanteda)
 library(tm)
 
-tweets <- read.csv("sma_filer/coded_tweets.csv")
+tweets <- read.csv("sma_filer/tweets.csv")
 
 tweets <- tweets %>% 
-  select(-status_id, -coder_id)
+  select(-status_id, -coder_id, -X)
 
 tweets_splitt <- initial_split(tweets, #  Del datasettet i to
-                            prop = 0.8, # 80 prosent av data (dvs. 80 prosen av radene/talksene) skal gå inn i treningsdata, resten blir testdata
+                            prop = 0.8, # 80 prosent av data (dvs. 80 prosen av radene) skal gå inn i treningsdata, resten blir testdata
                             strata = collection) # Passer på at Y, tema, er godt representert i både treningsdatasett og testdatasett
 
 tweets_trening <- training(tweets_splitt) # Lager treningsdatasett
@@ -40,7 +40,7 @@ prep(tweets_oppskrift) %>% # Iverksetter preprosesseringsstegene slik beskrevet 
   bake(new_data = NULL) %>% # Ser på hvordan oppskrifts-objektet ser ut
   head(5) %>% select(1:5) 
 
-
+mutate(ny = str_extract(gammel, "_\\.*|1_\\.*"))
 
 contrl_preds <- control_resamples(save_pred = TRUE)
 
@@ -82,7 +82,7 @@ metrikk_glm %>%
 
 
 ### Ikke-veiledet ###
-tweets <- read.csv("sma_filer/coded_tweets.csv")
+tweets <- read.csv("sma_filer/tweets.csv")
 
 tweets <- tweets %>% 
   select(-status_id, -coder_id)
@@ -110,4 +110,4 @@ rainette_cluster <- rainette(
   k = 4)
 
 rainette_plot(rainette_cluster, tweets_dfm, k = 4)
-
+set.seed(8434323)
