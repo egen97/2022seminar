@@ -7,6 +7,10 @@ library(quanteda)
 library(tm)
 
 tweets <- read.csv("sma_filer/tweets.csv")
+tweets_mod <- tweets
+tweets_new <- tweets[101:40,]
+
+tweets <- read.csv("sma_filer/tweets.csv")
 
 tweets <- tweets %>% 
   select(-status_id, -coder_id, -X)
@@ -59,11 +63,12 @@ glm_wf <- workflow(tweets_oppskrift, # Datasettet vårt etter preprosessering
 glm_rs <- fit_resamples( # Passer modellen ved å bruke testdata og valideringsdata i sekvens fem ganger
   glm_wf, # Dette objektet forteller hva som er data og hva som er modellen
   resamples = tweets_folds, # Spesifiserer hva valideringsdataene er
-  control = contrl_preds # Legger valgene som jeg lagret over
+  control = contrl_preds, # Legger valgene som jeg lagret over,
+  save_preds = TRUE
 )
 
 
-
+class(glm_rs)
 final_fittweets <- last_fit(glm_wf, tweets_splitt) # Passer SVM-modellen til testdatasettet
 
 collect_metrics(final_fittweets)
@@ -111,3 +116,18 @@ rainette_cluster <- rainette(
 
 rainette_plot(rainette_cluster, tweets_dfm, k = 4)
 set.seed(8434323)
+
+
+
+something <- extract_fit_engine(final_fittweets)
+summary(something)
+
+
+predict(something, new_data = tweets_test)
+
+hm <- prep(tweets_oppskrift) %>% # Iverksetter preprosesseringsstegene slik beskrevet i oppskriften over
+  bake(new_data = tweets_new)
+
+mod_engine <- extract_fit_engine(final_fittweets)
+
+what <- predict(mod_engine, new_data =  hm, newx = 2:350)

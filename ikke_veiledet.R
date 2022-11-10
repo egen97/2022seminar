@@ -21,3 +21,7 @@ tedtalks_dfm <- tedtalks_tfidf %>%
 rainette_cluster <- rainette(
   tedtalks_dfm,
   k = 8)
+
+dfm_tfidf(dfm(corpus(tweets_trening)))
+
+arrange(desc(n))

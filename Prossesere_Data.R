@@ -176,6 +176,8 @@ spr_time_tokens <- tokens_tolower(spr_time_tokens)
 
 spr_time_tokens <- tokens_remove(spr_time_tokens, pattern = stopwords('no'))
 
+spr_time_tokens <- tokens_wordstem(spr_time_tokens)
+
 spr_time_dfm <- dfm(spr_time_tokens)
 
 textplot_xray(kwic(spr_time_tokens, "regjering*")) + 
